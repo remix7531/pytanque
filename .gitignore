@@ -42,3 +42,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# Nix
+result
+result-*
+.direnv/
