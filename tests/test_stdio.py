@@ -131,7 +131,7 @@ class TestStdioMode:
             print(f"File AST result: {type(file_ast)}")
 
     def test_stdio_vs_socket_comparison(
-        self, check_pet_available, example_files, petanque_server
+        self, check_pet_available, example_files, server_config, petanque_server
     ):
         """Compare stdio and socket modes to ensure they behave similarly."""
         # Test with stdio mode
@@ -140,7 +140,9 @@ class TestStdioMode:
             stdio_toc = stdio_client.toc("./examples/foo.v")
 
         # Test with socket mode
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as socket_client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as socket_client:
             socket_client.set_workspace(debug=False, dir="./examples/")
             socket_toc = socket_client.toc("./examples/foo.v")
 
@@ -203,12 +205,14 @@ class TestStdioConstructor:
         assert client.port is None
         assert client.socket is None
 
-    def test_socket_constructor_valid(self):
+    def test_socket_constructor_valid(self, server_config):
         """Test valid socket constructor (ensure compatibility)."""
-        client = Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET)
+        client = Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        )
         assert client.mode == "socket"
-        assert client.host == "127.0.0.1"
-        assert client.port == 8765
+        assert client.host == server_config["host"]
+        assert client.port == server_config["port"]
         assert client.process is None
         assert client.socket is not None
 

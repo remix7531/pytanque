@@ -17,7 +17,9 @@ class TestFeedbackIntegration:
         self, server_config, example_files, petanque_server
     ):
         """Test that feedback captures command outputs correctly."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             state = client.start("./examples/foo.v", "addnC")
 
             # Execute various commands and check feedback
@@ -43,7 +45,9 @@ class TestIntegratedWorkflow:
         logging.getLogger("pytanque.client").setLevel(logging.INFO)
 
         try:
-            with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+            with Pytanque(
+                server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+            ) as client:
                 # Set workspace
                 client.set_workspace(debug=False, dir="./examples/")
 
@@ -107,7 +111,9 @@ class TestIntegratedWorkflow:
         self, server_config, example_files, petanque_server
     ):
         """Test complete workflow using all new features."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             # Get root state with feedback
             root_state = client.get_root_state("./examples/foo.v")
             print(f"Root state: {root_state.st}")
@@ -156,7 +162,9 @@ class TestNotationListing:
 
     def test_list_notations_basic(self, server_config, example_files, petanque_server):
         """Test listing notations in a simple arithmetic statement (proposition)."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             state = client.get_root_state("./examples/foo.v")
 
             # Test with basic arithmetic notation in a proposition
@@ -169,7 +177,9 @@ class TestNotationListing:
 
     def test_list_notations_scope(self, server_config, example_files, petanque_server):
         """Test notation listing behavior with respect to scopes."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             state = client.start("./examples/foo.v", 'use_notation_wo_scope')
             notations = client.list_notations_in_statement(state, "Lemma use_notation_wo_scope : 1 ⊕ 2 = 3.")
             # The ⊕ notation does not belong to a scope.
@@ -184,7 +194,9 @@ class TestNotationListing:
         self, server_config, example_files, petanque_server
     ):
         """Test listing notations in a complex statement with multiple operators."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             state = client.start("./examples/foo.v", "addnC")
 
             # Test with multiple notations in a proposition
@@ -201,7 +213,9 @@ class TestNotationListing:
         self, server_config, example_files, petanque_server
     ):
         """Test that list_notations_in_statement fails on other commands."""
-        with Pytanque("127.0.0.1", 8765, mode=PytanqueMode.SOCKET) as client:
+        with Pytanque(
+            server_config["host"], server_config["port"], mode=PytanqueMode.SOCKET
+        ) as client:
             state = client.start("./examples/foo.v", "addnC")
 
             # This should fail because "Check" is a command, not a statement
